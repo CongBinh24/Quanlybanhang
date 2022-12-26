@@ -1,0 +1,88 @@
+{% extends "index.html" %}
+
+{% block body %}
+{% if msg %}
+<div class="alert alert-success" role="alert">
+  {{ msg }}
+</div>
+{% endif %}
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Tên phòng</th>
+      <th scope="col">Loại phòng</th>
+      <th scope="col">Đơn giá</th>
+      <th scope="col">Tình trạng</th>
+      <th scope="col">Đặt phòng</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for p in phongs %}
+      <tr>
+      <th scope="row">{{ p.id }}</th>
+      <td>{{ p.tenPhong }}</td>
+      <td>{{ p.loaiPhong }}</td>
+      <td>{{ p.donGia }}</td>
+      <td>
+        {% if p.tinhTrang == PhongType.TRONG %}
+          Trống
+        {% else %}
+          Đã đặt
+        {% endif%}
+      </td>
+      <td><button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" onclick=getRoom({{ p.id }})>Đặt phòng</button></td>
+    </tr>
+  {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="#">
+      <div class="form-group">
+        <label for="TenKhach">Tên khách hàng</label>
+        <input type="text" class="form-control" id="TenKhach" name="TenKhach"  placeholder="Tên khách hàng">
+      </div>
+      <div class="form-group">
+        <label for="LoaiKhach">Loại khách</label>
+        <select name="LoaiKhach" id="LoaiKhach" class="form-control">
+          <option value="1">Nội địa</option>
+          <option value="2">Nước ngoài</option>
+        </select>
+      </div>
+        <div class="form-group">
+        <label for="CMND">CMND</label>
+        <input type="text" class="form-control" name="CMND" id="CMND" aria-describedby="emailHelp" placeholder="CMND">
+      </div>
+
+        <div class="form-group">
+        <label for="DiaChi">Địa chỉ</label>
+        <input type="text" class="form-control" id="DiaChi" name="DiaChi" aria-describedby="emailHelp" placeholder="Địa chỉ">
+      </div>
+      <div class="form-group">
+        <label for="SoLuongKhach">Số lượng khách</label>
+        <input type="number" class="form-control" id="SoLuongKhach" name="SoLuongKhach" aria-describedby="emailHelp" placeholder="Số lượng khách">
+      </div>
+
+      <input type="hidden" class="form-control" id="idPhong" name="IDPhong" aria-describedby="emailHelp" placeholder="idPhong">
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+         </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

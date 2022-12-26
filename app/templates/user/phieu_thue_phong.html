@@ -1,0 +1,89 @@
+{% extends "index.html" %}
+
+{% block body %}
+{% if msg %}
+<div class="alert alert-success" role="alert">
+  {{ msg }}
+</div>
+{% endif %}
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Tên phòng</th>
+      <th scope="col">Ngày nhận phòng</th>
+      <th scope="col">Loại khách</th>
+      <th scope="col">Số lượng khách</th>
+      <th scope="col">Thanh toán</th>
+      <th scope="col">Hủy</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for p in phongs %}
+      <tr>
+      <th scope="row">{{ p.id }}</th>
+      <td>{{ p.tenKhach }}</td>
+      <td>{{ p.ngayNhanPhong }}</td>
+      <td>
+        {{ p.loaiKhach }}
+      </td>
+      <td>{{ p.soLuongKhach}}</td>
+
+      </td>
+      <td><button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"
+                  onclick='getHoaDon({{ p.id }} , "{{ p.tenKhach }}", "{{ p.ngayNhanPhong }}", {{ p.phong_id}}, {{ p.soLuongKhach }}, "{{p.loaiKhach}}")'>Thanh toán</button></td>
+        <td> <a href="/huyPhong/{{p.id}}"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" >Hủy</button></a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="#">
+      <div class="form-group">
+        <label for="TenKhach">Tên khách hàng</label>
+        <input type="text" class="form-control" id="TenKhach" name="TenKhach"  placeholder="Tên khách hàng">
+      </div>
+
+      <div class="form-group">
+        <label for="NgayNhanPhong">Ngày nhân phòng</label>
+        <input type="date" class="form-control" name="NgayNhanPhong" id="NgayNhanPhong"  >
+      </div>
+
+        <div class="form-group">
+        <label for="NgayTraPhong">Ngày trả phòng</label>
+        <input type="date" class="form-control" name="NgayTraPhong" id="NgayTraPhong"  >
+      </div>
+
+        <div class="form-group">
+        <label for="PhuThu">Phụ thu</label>
+        <input type="number" class="form-control" name="PhuThu" id="PhuThu"  >
+      </div>
+
+      <div class="form-group">
+        <label for="TongTien">Tổng tiền</label>
+        <input type="number" class="form-control" name="TongTien" id="TongTien"  >
+      </div>
+      <input type="hidden" class="form-control" id="idPhieuThuePhong" name="IDPhieuThuePhong"  >
+      <input type="hidden" class="form-control" id="idPhong" name="IDPhong"  >
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+         </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

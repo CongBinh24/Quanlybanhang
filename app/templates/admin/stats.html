@@ -1,0 +1,143 @@
+{% extends "admin/base.html" %}
+
+{% block body %}
+<h1 class="text-center text-danger">THỐNG KÊ BÁO CÁO</h1>
+
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <table class="table">
+            <tr>
+                <td>Mã phòng</td>
+                <td>Tên phòng</td>
+                <td>Doanh thu</td>
+            </tr>
+            {% for s in stats %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>{{ s[1] }}</td>
+                <td>
+                    {% if s[2]%}
+                        {{ "{:,.1f}".format(s[2]) }} VNĐ
+                    {% else %}
+                        0VNĐ
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-5 col-xs-12">
+        <form>
+            <div class="form-group">
+                <input type="text" class="form-control" name="kw" placeholder="Nhập tên phòng...."/>
+            </div>
+            <div class="form-group">
+                <input type="date" class="form-control" name="from_date"/>
+            </div>
+            <div class="form-group">
+                <input type="date" class="form-control" name="to_date"/>
+            </div>
+            <input type="submit" class="btn btn-info" value="Thống kê">
+        </form>
+        <canvas id="chart1"></canvas>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+      <table class="table">
+        <tr>
+            <td>Tháng</td>
+            <td>Doanh thu</td>
+        </tr>
+        {% for s in month_stats %}
+        <tr>
+            <td>{{ s[0] }}</td>
+            <td>
+                {% if s[1]%}
+                    {{ "{:,.1f}".format(s[1]) }} VNĐ
+                {% else %}
+                    0VNĐ
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+        <div class="col-md-5 col-xs-12">
+        <form>
+            <div class="form-group">
+                <input type="number" class="form-control" min="2000" name="year" placeholder="Nhập năm"/>
+            </div>
+            <input type="submit" class="btn btn-danger" value="Thống kê">
+        </form>
+        <canvas id="chart2"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let labels = [], info = []
+    let colors = [], borderColors = []
+    let r, g, b
+
+    let labels2 = [], info2 = []
+    let colors2 = [], borderColors2 = []
+
+    {% for s in stats %}
+        {% if s[2] %}
+            labels.push('{{s[1]}}')
+            info.push({{s[2]}})
+
+            r = Math.random()*255
+            g = Math.random()*255
+            b = Math.random()*255
+
+            colors.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+            borderColors.push(`rgba(${r}, ${g}, ${b}, 1)`)
+        {% endif %}
+    {% endfor %}
+
+    {% for s in month_stats %}
+        labels2.push('{{s[0]}}')
+        info2.push({{s[1]}})
+
+        r = Math.random()*255
+        g = Math.random()*255
+        b = Math.random()*255
+
+        colors2.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+        borderColors2.push(`rgba(${r}, ${g}, ${b}, 1)`)
+    {% endfor %}
+
+    window.onload = function() {
+        const ctx = document.getElementById('chart1').getContext('2d');
+        const ctx2 = document.getElementById('chart2').getContext('2d');
+        loadChart(ctx, labels, info, 'line', colors, borderColors)
+        loadChart(ctx2, labels2, info2, 'bar', colors2, borderColors2)
+    }
+
+function loadChart(ctx, labels, info, type, colors, borderColors) {
+        const myChart = new Chart(ctx, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Thống kê doanh thu',
+                    data: info,
+                    backgroundColor: colors,
+                    borderColor: borderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}
